@@ -49,18 +49,13 @@ Reproducible Research
  
 Topics
 ============
-1\. [Basics of R](https://github.com/gjm112/DSCI401/blob/main/R/Basics_of_R.R)  and [Python](https://colab.research.google.com/drive/1yMjxaCJkCxVzF30IcqI6K9C8n2lKjqUm)
+1\. [Basics of R](https://github.com/gjm112/DSCI101/blob/main/R/Basics_of_R.R)
 
-1a\. Python objects: [Sets and Dictionaries](https://colab.research.google.com/drive/1nmWys8jdgJfpGyZsmJr-bdMtxkufClEl), [Strings and Tuples](https://colab.research.google.com/drive/1J87N_1NerOLBLz4zxFL42nIsj5GmoNEt), [Pandas](https://colab.research.google.com/drive/1N22wXpWLv3SKZ2WxU1Ntjgv63LkUz01G#scrollTo=lQ6cEWgiry5S)
+1a\. [R Objects: Vectors, Matrices, Arrays, Lists, and Data Frames](https://github.com/gjm112/DSCI101/blob/main/R/vectors_lists_dataframes.R)
 
-1b\. [R Objects: Vectors, Matrices, Arrays, Lists, and Data Frames](https://github.com/gjm112/DSCI401/blob/main/R/vectors_lists_dataframes.R)
+2\. [Data Wrangling - Single Table](https://github.com/gjm112/DSCI101/blob/main/R/Data_wrangling_on_one_table.Rmd)
 
-2\. [Data Wrangling - Single Table](https://github.com/gjm112/DSCI401/blob/main/R/Data_wrangling_on_one_table.Rmd)
-
-3a\. [Data Visualization in R](https://github.com/gjm112/DSCI401/blob/main/R/Data_visualizations.Rmd)
-
-3b\. [Data Visualization in Python](https://colab.research.google.com/drive/1-LbqqSotHupNGd507kn9bP4Ywv4M3hXM)
-
+3\. [Data Visualization in R](https://github.com/gjm112/DSCI101/blob/main/R/Data_visualizations.Rmd)
 
 4\. Data Wrangling - Multiple Tables
 
