@@ -1,0 +1,185 @@
+---
+title: "Interactive Data Viz"
+author: "Gregory J. Matthews"
+date: "11/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(plotly) 
+library(tidyverse)
+
+fig <- plot_ly() %>% 
+  add_lines(x = c("a","b","c"), y = c(1,3,2))%>% 
+  layout(title="sample figure", xaxis = list(title = 'x'), yaxis = list(title = 'y'), plot_bgcolor = "#c7daec") 
+
+str(fig$x) 
+fig
+#If you wanrted to edit from a list!
+fig$x$attrs[[2]]$y <- c(3,2,1)
+```
+
+```{r}
+fig
+```
+
+#Build a plot as a list
+```{r}
+library(plotly)
+fig = list(
+  data = list(
+    list(
+      x = c(1, 2, 3),
+      y = c(1, 3, 2),
+      type = 'bar'
+    )
+  ),
+  layout = list(
+    title = 'A Figure Specified By R List',
+    plot_bgcolor='#e5ecf6', 
+         xaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff'), 
+         yaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff')
+  )
+)
+# To display the figure defined by this list, use the plotly_build function
+plotly_build(fig)
+```
+
+#Build a plot with plot_ly rather than a list.
+```{r}
+library(plotly) 
+
+fig <- plot_ly(x = c(1, 2, 3), y = c(1, 3, 2), type = 'bar')%>% 
+  layout(title = 'A Plotly Figure',
+         plot_bgcolor='#e5ecf6', 
+         xaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff'), 
+         yaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff')) 
+fig
+```
+
+```{r}
+library(plotly)
+data(iris)
+
+fig <- plot_ly(data = iris, x = ~Sepal.Width, y = ~Sepal.Length, color = ~Species, 
+               type = "scatter", mode = "markers")%>%
+  layout(title="A Plotly Figure", legend=list(title=list(text='species')),
+         plot_bgcolor='#e5ecf6', 
+         xaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff'), 
+         yaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff'))
+fig
+```
+
+#Scatterplots
+```{r}
+library(plotly)
+
+fig <- plot_ly(data = iris, x = ~Sepal.Length, y = ~Petal.Length, type = "scatter", mode = "markers")
+
+fig
+```
+#Plotting markers and lines
+```{r}
+library(plotly)
+
+trace_0 <- rnorm(100, mean = 5)
+trace_1 <- rnorm(100, mean = 0)
+trace_2 <- rnorm(100, mean = -5)
+x <- c(1:100)
+
+data <- data.frame(greg = x, trace_0, trace_1, trace_2)
+
+fig <- plot_ly(data, x = ~greg)
+fig <- fig %>% add_trace(y = ~trace_0, name = 'trace 0',mode = 'lines')
+fig <- fig %>% add_trace(y = ~trace_1, name = 'trace 1', mode = 'lines+markers')
+fig <- fig %>% add_trace(y = ~trace_2, name = 'trace 2', mode = 'markers')
+
+fig
+```
+
+#Plotly works with ggplot!
+
+```{r}
+library(tidyverse)
+library(mdsr)
+library(babynames)
+Beatles <- babynames %>%
+  filter(name %in% c("John", "Paul", "George", "Ringo") & sex == "M") %>%
+  mutate(name = factor(name, levels = c("John", "George", "Paul", "Ringo")))
+beatles_plot <- ggplot(data = Beatles, aes(x = year, y = n)) +
+  geom_line(aes(color = name), size = 2)
+beatles_plot
+```
+
+```{r}
+library(plotly)
+ggplotly(beatles_plot)
+```
+
+#We can also do interactive tables!
+#With datatable!
+```{r}
+library(DT)
+datatable(Beatles, options = list(pageLength = 10))
+```
+
+#Dygraphs
+```{r}
+library(dygraphs)
+Beatles %>% 
+  filter(sex == "M") %>% 
+  select(year, name, prop) %>%
+  pivot_wider(names_from = name, values_from = prop) %>%
+  dygraph(main = "Popularity of Beatles names over time") %>% 
+  dyRangeSelector(dateWindow = c("1940", "1980"))
+```
+
+#In class exercises
+```{r}
+ins <- read.csv("/Users/gregorymatthews/Dropbox/Public/inspections_clean.csv")
+
+#Make an interactive plot that shows pass rate by month with inspection type represented by color.  
+#Repeat this for a dygraph
+#Class: Come up with an interesting plot we can make and we'll all make it together.  Ask class for an idea.  
+```
+
+
+```{r}
+ins <- read.csv("/Users/gregorymatthews/Dropbox/Public/inspections_clean.csv")
+library(lubridate)
+ins$inspection_date <- as.Date(ins$inspection_date)
+ins <- ins %>% mutate(month = month(inspection_date), year = year(inspection_date))
+ins$year_month <- as.Date(paste(ins$year, ins$month,"01",sep = "-"))
+
+summ <- ins %>%  group_by(year_month, inspection_type) %>% summarize(pass_rate = mean(results %in% c("Pass","Pass w/ Conditions")))
+
+g <- ggplot(aes(x = year_month, y = pass_rate, colour = inspection_type), data = summ) + geom_line()
+g
+
+ggplotly(g)
+
+
+```
+

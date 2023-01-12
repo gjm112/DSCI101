@@ -1,0 +1,474 @@
+---
+title: "Data Visualization"
+author: "Gregory J. Matthews"
+date: "8/29/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(mdsr)
+library(tidyverse)
+data("CIACountries")
+```
+
+# Scatterplots
+### Base R
+
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ)
+```
+
+Add axis labels
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education")
+```
+
+Change the shape
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16)
+```
+
+Change the color
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16, 
+     col = "red")
+```
+
+Change the x and y limits 
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16, 
+     col = "red", 
+     xlim = c(0,150000), 
+     ylim = c(0,15))
+```
+
+Change the x and y limits 
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16, 
+     col = "red", 
+     xlim = c(0,150000), 
+     ylim = c(0,15))
+```
+
+Aspect Ratio
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16, 
+     col = "red", 
+     xlim = c(0,150000), 
+     ylim = c(0,15), 
+     asp = 10000)
+```
+
+Change axis labels 
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16, 
+     col = "red", 
+     xlim = c(0,150000), 
+     ylim = c(0,15), 
+     asp = 10000, 
+     xaxt = 'n', 
+     yaxt = 'n')
+
+axis(1, c(0,100000,200000), c("None","A little","A lot"))
+axis(2, c(0,5,10,15), c("None","Ok","Good","Great"))
+```
+
+Size  
+```{r}
+plot(CIACountries$gdp, 
+     CIACountries$educ, 
+     xlab = "GDP",
+     ylab = "Education",
+     pch = 16, 
+     col = "red", 
+     xlim = c(0,150000), 
+     ylim = c(0,15), 
+     asp = 10000, 
+     xaxt = 'n', 
+     yaxt = 'n', 
+     cex = 0.5)
+
+axis(1, c(0,100000,200000), c("None","A little","A lot"))
+axis(2, c(0,5,10,15), c("None","Ok","Good","Great"))
+```
+
+### ggplot
+The key to using ggplot to is to think of ever command as a layer!
+
+```{r}
+library(ggplot2)
+ggplot(aes(x = gdp, y = educ),data = CIACountries) + geom_point()
+
+#CIACountries %>% ggplot(aes(x = gdp, y = educ)) + geom_point()
+```
+
+Add axis labels
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point() + 
+  xlab("GDP") + 
+  ylab("Education")
+```
+
+Change the shape
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point(shape = 23) +
+  xlab("GDP") +
+  ylab("Education")
+```
+
+Change the color
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point(shape = 23, colour = "red") +
+  xlab("GDP") +
+  ylab("Education") 
+```
+
+Change the x and y limits 
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point(shape = 23, colour = "red") +
+  xlab("GDP") +
+  ylab("Education") + 
+  xlim(0,200000) + 
+  ylim(0,15)
+```
+
+Aspect Ratio
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point(shape = 23, colour = "red") +
+  xlab("GDP") +
+  ylab("Education") + 
+  xlim(0,200000) + 
+  ylim(0,15) + 
+  coord_fixed(ratio=10000)
+```
+
+Change axis values
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point(shape = 23, colour = "red") +
+  xlab("GDP") +
+  ylab("Education") + 
+  xlim(0,200000) + 
+  ylim(0,15) + 
+  coord_fixed(ratio=10000) + 
+  scale_x_continuous(breaks = c(0,100000,200000),
+                     labels = c("None","A little","A lot"), 
+                     limits = c(0,200000)) + 
+  scale_y_continuous(breaks = c(0,5,10,15),
+                     labels = c("None","Ok","Good","Great"),
+                     limits = c(0,15)
+                     )
+#Note: scale_x_continuous overrules the xlim!
+```
+
+Size  
+```{r}
+ggplot(aes(x = gdp, y = educ), data = CIACountries) +
+  geom_point(shape = 23, colour = "red", size = 0.5) +
+  xlab("GDP") +
+  ylab("Education") + 
+  xlim(0,200000) + 
+  ylim(0,15) + 
+  coord_fixed(ratio=10000) + 
+  scale_x_continuous(breaks = c(0,100000,200000),
+                     labels = c("None","A little","A lot"), 
+                     limits = c(0,200000)) + 
+  scale_y_continuous(breaks = c(0,5,10,15),
+                     labels = c("None","Ok","Good","Great"),
+                     limits = c(0,15)
+                     )
+
+```
+
+# Univariate displays
+
+### Histograms
+
+```{r}
+library(mdsr)
+data("SAT_2010")
+```
+```{r}
+#Base R
+hist(SAT_2010$math)
+#ggplot
+ggplot(aes(x = math), data = SAT_2010) + geom_histogram()
+#gggplot with breaks
+ggplot(aes(x = math), data = SAT_2010) + geom_histogram(breaks = c(400,450,550,600,700))
+```
+
+
+```{r}
+#Base R
+dens <- density(SAT_2010$math)
+plot(dens$x, dens$y, type = "l")
+#ggplot
+#This is a lot cleaner code and nicer looking!
+ggplot(aes(x = math), data = SAT_2010) + geom_density()
+
+#More jagged
+ggplot(aes(x = math), data = SAT_2010) + geom_density(bw = 0.01)
+```
+
+```{r}
+sub <- head(SAT_2010, 10)
+sub <- sub[order(sub$math),]
+barplot(sub$math, names.arg = sub$state)
+
+#ggplot
+ggplot(
+  data = head(SAT_2010, 10), 
+  aes(x = reorder(state, math), y = math)
+) +
+  geom_col() +
+  labs(x = "State", y = "Average math SAT score")
+```
+### Stacked bar chart
+```{r}
+library(mosaicData)
+ggplot(data = mosaicData::HELPrct, aes(x = homeless)) + 
+  geom_bar(aes(fill = substance), position = "fill") 
+
+ggplot(data = mosaicData::HELPrct, aes(x = homeless)) + 
+  geom_bar(aes(fill = substance), position = "fill") +
+  scale_fill_brewer(palette = "Spectral") 
+
+
+ggplot(data = mosaicData::HELPrct, aes(x = homeless)) + 
+  geom_bar(aes(fill = substance), position = "fill") +
+  scale_fill_brewer(palette = "Spectral") + 
+  coord_flip()
+
+```
+
+
+### Multivariate displays
+```{r}
+
+g <- ggplot(
+  data = SAT_2010, 
+  aes(x = expenditure, y = math)
+) + 
+  geom_point()
+
+```
+ We can easily add a trend line with ggplot.  
+```{r}
+g + 
+  geom_smooth(method = "loess", se = FALSE) + 
+  xlab("Average expenditure per student ($1000)") +
+  ylab("Average score on math SAT")
+```
+
+To do this in base R you have to do this: 
+```{r}
+plot(SAT_2010$expenditure, SAT_2010$math)
+a <- loess(SAT_2010$math ~ SAT_2010$expenditure)
+points(a$x[order(a$x)], a$fitted[order(a$x)], type = "l", col = "red")
+```
+
+```{r}
+SAT_2010 <- SAT_2010 %>%
+  mutate(
+    SAT_rate = cut(
+      sat_pct, 
+      breaks = c(0, 30, 60, 100), 
+      labels = c("low", "medium", "high")
+    )
+  )
+#g <- g %+% SAT_2010
+#g + aes(color = SAT_rate)
+#To this in base R is possible, but it is a pain!
+
+
+#Full code: 
+ggplot(data = SAT_2010, aes(x = expenditure, y = math)) + 
+  geom_point(aes(color = SAT_rate)) + geom_smooth(aes(color = SAT_rate), method = "lm", se = FALSE) + scale_colour_brewer(palette = "Spectral") 
+```
+
+### Faceting
+
+```{r}
+#Base R
+par(mfrow = c(1, 3))
+
+plot(SAT_2010$expenditure[SAT_2010$SAT_rate == "low"],
+     SAT_2010$math[SAT_2010$SAT_rate == "low"],
+     xlab = "expenditure",
+     ylab = "math score")
+
+plot(SAT_2010$expenditure[SAT_2010$SAT_rate == "medium"],
+     SAT_2010$math[SAT_2010$SAT_rate == "medium"],
+     xlab = "expenditure",
+     ylab = "math score")
+
+plot(SAT_2010$expenditure[SAT_2010$SAT_rate == "high"],
+     SAT_2010$math[SAT_2010$SAT_rate == "high"],
+     xlab = "expenditure",
+     ylab = "math score")
+```
+
+So much easier in ggplot!
+
+```{r}
+#g + facet_wrap( ~SAT_rate )
+#g + facet_grid(~ SAT_rate )
+```
+
+```{r}
+#full code
+SAT_2010 <- SAT_2010 %>%
+  mutate(SAT_rate = cut(
+    sat_pct,
+    breaks = c(0, 30, 60, 100),
+    labels = c("low", "medium", "high")
+  ))
+g <- ggplot(data = SAT_2010,
+            aes(x = expenditure, y = math)) +
+  geom_point() + geom_smooth(method = "lm") + facet_wrap( ~ SAT_rate)
+g
+
+```
+
+NHANES example
+```{r}
+library(NHANES)
+ggplot(
+  data = slice_sample(NHANES, n = 1000), 
+  aes(x = Age, y = Height, color = Gender)
+) + 
+  geom_point() + 
+  geom_smooth() + 
+  xlab("Age (years)") + 
+  ylab("Height (cm)") +
+  labs(color = "Gender")
+```
+
+```{r}
+#relevel the reference category
+library(NHANES)
+ggplot(
+  data = slice_sample(NHANES, n = 1000), 
+  aes(x = Age, y = Height, color = fct_relevel(Gender, "male"))
+) + 
+  geom_point() + 
+  geom_smooth() + 
+  xlab("Age (years)") + 
+  ylab("Height (cm)") +
+  labs(color = "Gender")
+```
+
+```{r}
+library(macleish)
+ggplot(data = whately_2015, aes(x = when, y = temperature)) + 
+  geom_line(color = "darkgray") + 
+  geom_smooth() + 
+  xlab(NULL) + 
+  ylab("Temperature (degrees Celsius)")
+```
+```{r}
+# whately_2015 %>%
+#   mutate(month = as.factor(lubridate::month(when, label = TRUE))) %>%
+#   group_by(month) %>% 
+#   skim(temperature) %>%
+#   select(-na)
+
+whately_2015$month <-
+  as.factor(lubridate::month(whately_2015$when, label = TRUE))
+
+
+#Base R
+boxplot(
+  whately_2015$temperature ~ whately_2015$month,
+  xlab = "Month",
+  ylab = expression("Temperature (" *  ~ degree * C * ")")
+)
+
+#ggplot
+ggplot(
+  data = whately_2015, 
+  aes(
+    x = lubridate::month(when, label = TRUE), 
+    y = temperature
+  )
+) + 
+  geom_boxplot() +
+  xlab("Month") + 
+  ylab(expression("Temperature ("*~degree*C*")"))
+```
+
+Check out the extended example here: https://mdsr-book.github.io/mdsr2e/ch-vizII.html#sec:babynames
+
+
+# In class exercise
+Make these plots!
+
+```{r echo = FALSE}
+SAT_2010 <- SAT_2010 %>% 
+  mutate(ptr = ifelse(pupil_teacher_ratio >= 15, "ptr - high","ptr - low"), 
+         sal = ifelse(salary >= 52000, "sal - high","sal - low"))
+
+library(ggplot2)
+ggplot(aes(x = math, y = read, col = SAT_rate), data = SAT_2010) + geom_point() + facet_grid(sal~ptr) 
+```
+
+```{r echo = FALSE}
+library(ggplot2)
+a <- SAT_2010[,c("state","salary","read")]
+b <- SAT_2010[,c("state","salary","math")]
+c <- SAT_2010[,c("state","salary","write")]
+
+names(a) <- names(b) <- names(c) <- c("state","salary","score")
+
+
+a$subject <- "read"
+b$subject <- "math"
+c$subject <- "write"
+
+
+dat <- data.frame(rbind(a,b,c))
+
+
+ggplot(aes(x = salary, y = score, col = subject), data = dat) + geom_point() + geom_smooth(se = FALSE)
+
+```
+
+
+ 

@@ -1,0 +1,78 @@
+---
+title: "Tidy Data"
+author: "Gregory J. Matthews"
+date: "9/29/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Tidy Data
+
+Data are called ``tidy" if they are organized according to two simple rules: 
+ - The rows, called cases or observations, each refer to a specific, unique, and similar sort of thing, e.g., girls named Somaly in 1984.
+ - The columns, called variables, each have the same sort of value recorded for each row. For instance, n gives the number of babies for each case; sex tells which gender was assigned at birth.
+ 
+## Reshaping Data
+```{r}
+library(mdsr)
+library(tidyverse)
+BP_wide <- data.frame(subject = c("BHO","GWB","WJC"),
+                      before = c(160,120, 105),
+                      after = c(115, 135, 145))
+#in wide format
+BP_wide
+```
+
+```{r}
+#In long format
+BP_narrow <- data.frame(subject =  c("BHO","GWB","WJC","BHO","GWB","WJC"),
+                      when = c(rep("before",3),rep("after",3)),
+                     sbp = c(160,120,105,115,135,145))
+BP_narrow                
+```
+
+
+#Pivoting wider
+- The values_from argument is the name of the variable in the narrow format that is to be divided up into multiple variables in the resulting wide format. 
+
+- The names_from argument is the name of the variable in the narrow format that identifies for each case individually which column in the wide format will receive the value.
+```{r}
+BP_narrow %>% 
+  pivot_wider(names_from = when, values_from = sbp)
+```
+
+## Pivoting longer
+```{r}
+BP_wide %>% 
+  pivot_longer(-subject, names_to = "when", values_to = "sbp")
+
+BP_wide %>% 
+  pivot_longer(c(before, after), names_to = "when", values_to = "sbp")
+```
+
+
+## Example 
+In class exercises: 
+ - Find the most gender neutral name
+ - What name saw the biggest drop from 1900 to 1950?  How about from 1950 to 2000?  
+```{r}
+
+library(babynames)
+babynames
+#write.csv(babynames, file = "./data/babynames.csv", row.names = FALSE)
+```
+
+
+```{r}
+library(tidyverse)
+test <- babynames %>% group_by(name,sex) %>% summarise(total = sum(n)) %>% pivot_wider(names_from = sex, values_from = total) %>% mutate(ratio = M/(M+F)) %>% mutate(balanced = abs(ratio - .5)) %>% filter(M > 1000 & F > 1000) %>% arrange(balanced) 
+
+
+```
+
+
+
+
