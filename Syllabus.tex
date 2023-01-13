@@ -1,0 +1,313 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+%\SweaveOpts{concordance=TRUE}
+
+\section*{Modern Data Science with R}
+3-credit course (DSCI101)
+
+\subsection*{Instructor}
+Gregory J. Matthews, Ph. D.\\
+Loyola Hall 107 \\
+Chicago, IL \\
+Voice: 83561\\
+%Cell Phone: 413-335-3098\\
+Email: gmatthews1@luc.edu\\
+Office hour: By appointment (https://calendly.com/statsinthewild/office-hours-dsci101)
+
+
+\subsection*{Class Time}
+Class Time: Tuesday and Thursday 2:30pm-3:45pm \\
+Classroom:  Cudahy Library - Room 318 \\
+
+\subsection*{Twitter}
+Course Twitter Account: @StatsClass\\
+Course TikTok: @statsinthewild\\
+Course Hashtag: T.B.D.
+
+
+\subsection*{Course Description}
+This course provides students with an introduction to data science using the R programming languages covering such topics as data wrangling, data visualization, interacting with databases, principles of reproducible research, building simple statistical models/machine learning and data science ethics.
+
+\subsection*{Course Outcomes}
+Students will obtain an extensive background in the basic tools used in the field.
+
+\subsection*{Course Evaluation}
+It is a professional expectation that all students participate in course evaluations to guide ongoing program improvement.
+
+\subsection*{Prerequisite}
+None.  
+
+\subsection*{Book}
+\begin{itemize}
+\item Modern Data Science with R (2nd edition). Baumer, Kaplan, and Horton  \\
+PDF of book is available here: https://beanumber.github.io/mdsr2e/index.html
+\\
+%\item Introduction to Data Science: A Python Approach to Concepts, Techniques and Applications. Igual and Seguí.\\
+%https://github.com/DataScienceUB/introduction-datascience-python-book
+\end{itemize}
+%Introductory Statisitcs. Gould and Ryan. (Optional) 
+%OpenIntro Statistics: Second Edition. www.openintro.org (Optional)
+
+
+
+%\section*{Course Syllabus}
+%Topics to cover (This is roughly chapters 1-13 with parts of 14 and 15): 
+%\begin{itemize}
+%\item Introduction to R and R Studio 
+%\item File types (.csv, .txt, etc) and command prompt
+%\item Version control and github
+%\item Principles of reproducible research
+%\item Data visualization
+%\item Data summarization
+%\item Data wrangling for a single table (select, filter, mutate, arrange, summarize)
+%\item Data wrangling for multiple tables (inner join, outer join, etc.)
+%\item Working with tidy data (i.e. rectangular data files) (data input/output and reshaping data)
+%\item Iteration (vectorized function, map family, etc.)
+%\item Data science ethics
+%\item Sampling Distributions
+%\item The Bootstrap
+%\item Statistical Models
+%\item Predictive Modeling
+%\item Supervised Learning
+%\item Unsupervised Learning
+%\item Basic simulation 
+%\itme Interactive Data Visualization (e.g. Shiny, plotly, etc)
+%\item SQL and querying databases
+%
+%\end{itemize}
+%\begin{itemize}
+%\item Week 1 (9/2): Motivation, Background and Descriptive Statistics (Short Week)
+%\item Week 2 (9/9): Introduction to R/Exploring Relationships/Data Visualization
+%\item Week 3 (9/16): Introduction to R/Exploring Relationships/Data Visualization
+%\item Week 4 (9/23): Probability
+%\item Week 5 (9/30): Probability and Random Variables 
+%\item Week 6 (10/7): Random Variables and Probability Distributions
+%\item Week 7 (10/14): Point Estimation
+%\item Week 8 (10/21): Point Estimation, Confidence Intervals, Central Limit Theorem 
+%\item Week 9 (10/28): Point Estimation, Confidence Intervals, Central Limit Theorem 
+%\item Week 10 (11/4): Hypothesis Testing
+%\item Week 11 (11/11): Hypothesis Testing (Short Week)
+%\item Week 12 (11/18): Statistical Inference Between two variables
+%\item Week 13 (11/25): Statistical Inference Between two variables
+%\item Week 14 (12/2): Introduction to Regression
+%\end{itemize}
+
+\section*{Grade}
+\begin{itemize}
+\item 8 Homework Assignments (25\%)
+\item One Individual project (25\%)
+\item Exam 1 (25\%) 
+\item Final Exam (25\%)
+\end{itemize}
+
+\subsection*{Final Letter Grades}
+\begin{itemize}
+\item $\left[93,\infty\right)$ = A
+\item $\left[90,93\right)$ = A-
+\item $\left[87,90\right)$ = B+
+\item $\left[83,87\right)$ = B
+\item $\left[80,83\right)$ = B-
+\item $\left[77,80\right)$ = C+
+\item $\left[73,77\right)$ = C
+\item $\left[70,73\right)$ = C-
+\item $\left[67,70\right)$ = D
+\item $\left[60,67\right)$ = D+
+\item (-$\infty$, 60) = F
+\end{itemize}
+
+
+\section*{Exams}
+All exams will be take home exams.  
+
+\section*{Homework}
+Homework is due approximately every other week. Discussion between classmates is encouraged; however, the final work should be independent.  Homework must be submitted through Sakai.  \\
+
+Homework turned in after the due date will receive no credit.  To help your final grade, please do avoid late homework.\\
+
+\section*{Project}
+The individual project will require students to find a raw data set, wrangle the data into a useful format, perform some interesting analysis, and present results in a written report following the principles of reproducible research.  All code must be version controlled through github (or repository of your choice) and a link to the repository must be submitted along with the final report.  The project is due the same day as the scheduled final exam, which is Saturday, May 6, 2023.  \\
+
+\begin{itemize}
+\item Make-up policy: Missed Exams:  No make-up exams will be given. If you miss one exam and have a valid and verifiable personal or medical excuse (such as an illness requiring hospitalization or a death in the immediate family), your final exam score will be pro-rated to make up the missing points. All medical excuses must be signed by your physician. Original documents must be shown to the instructor; no photocopied or scanned documents will be accepted. Students who do not provide appropriate documentation for missing an exam will receive a zero on the exam. No more than one exam may be missed. Please note that vacations and travel plans are not valid reasons for missing an exam.
+
+\item Academic Dishonesty: Many practice problems will be given to be worked on outside of class; discussing practice problems with others is encouraged and in-class discussions are also encouraged. It is presumed and required that students do their own work on the exams. Cheating includes, but is not limited to, illegal collaboration, copying, using materials not permitted, and assisting others on tests. Anyone found cheating will not be permitted to withdraw and will receive an F grade for the course. Your academic dean will be informed and a statement will be placed in your permanent file.\\
+
+\item For more information on academic integrity, please see: \\
+https://www.luc.edu/academics/catalog/undergrad/reg\_academicintegrity.shtml
+\end{itemize}
+
+
+
+
+\begin{center}
+\begin{tabular}{ |c|p{5cm}|c|c| } 
+ \hline
+ Week & Topic & Chapter & Due Dates\\
+  \hline 
+ 1 & Introduction to R.   Introduction to IDE's (e.g. RStudio).  File types (.csv, .txt, etc) and command prompt. Version control and github. Principles of reproducible research & 1 &  \\ 
+   \hline 
+ 2 & Data Visualization & 2 & HW1 \\
+   \hline 
+  3 & Data Summarization & 3 & HW2 \\
+    \hline 
+    4 &Data wrangling for a single table (select, filter, mutate, arrange, summarize)
+Data wrangling for multiple tables (inner join, outer join, etc.)
+ & 4 and 5 & HW3 \\
+   \hline 
+     5 & Working with tidy data (i.e. rectangular data files) (data input/output and reshaping data) & 6 & HW3 \\ 
+ \hline
+      6 & Iteration (vectorized function, map family, etc.)& 7 & HW4\\ 
+      \hline
+            7 & Data Ethics & 8 & HW5\\ 
+            \hline 
+                        & Spring Break & \\ 
+            \hline
+                        8 & Sampling distributions and the bootstrap & 9 & Exam 1\\ 
+                                    \hline 
+                        9 &Statistical Modeling & 9 & Project\\ 
+                                                            \hline 
+                        10 & Introduction to Predictive Modeling & 10 & HW6 \\ 
+                                                                                    \hline 
+                        11 & Supervised and Unsupervised Learning & 11 and 12 & \\ 
+                                                                                    \hline 
+                        12 & Basic simulation Interactive Data Visualization (e.g. Shiny, plotly, matplotlib, seaborn, etc) & 13 & HW7 \\ 
+                                                                                    \hline 
+                        13 & Thanksgiving Break &  &  \\ 
+                                                                                                            \hline 
+                        14 & SQL and querying databases & 15 & HW8 \\ 
+                                                                                                            \hline 
+                        15 & {\bf \em Final Exam Week} & & Final Exam\\ 
+                        \hline
+                        \end{tabular}
+
+\end{center}
+
+\end{document}
+
+
+
+Week
+Topic
+Remark
+1, 2
+Motivation,  Background and Descriptive Statistics
+Chapter 1 to 2, hw1
+3
+Probability
+Chapter 3.1 -3.6, 
+4
+Sampling Distribution
+Chapter 3.7-4, hw2, qz1
+5-6
+Mean of one population
+Chapter 5,
+6-7
+Difference of mean for two populations
+Chapter 6, hw3
+8
+Review and midterm
+
+9
+Categorical data
+Chapter 7
+10
+Comparing risks in two populations
+Chapter 8, hw4
+11
+Analysis of Variance
+Chapter 9, qz2
+12
+Correlation and Regression
+Chapter 10, hw5
+13
+Logistic Regression Analysis 
+Chapter 11
+14
+Nonparametric tests,  Survival Analysis and review
+Chapter 12-13
+Table 1
+
+
+
+
+Required Textbook:
+Introductory Applied Biostatistics by DâAgostino, Sullivan and Beiser
+
+Access to SAS:
+The students are expected to have access to statistical software SAS, which is available in universityâs computing classrooms. Student licenses at discounted rate are available to from OIT.
+
+Other readings:
+TBA
+
+Grade and Homework policy:
+Five homeworks (30%), 2 quizzes (20%), 1 midterm (25%) and 1 final (25%).
+
+Homework is assigned every two weeks on average. Discussion between classmates is encouraged; however, the writing should be independent. Homework turned in after the due date will be scored with a multiplier as shown in the Table 2. To help your final grade, please do avoid late homework.
+
+
+Less than 24 hrs
+24 to 48 hrs
+Beyond 48 hrs
+Multiplier
+0.7
+0.4
+0
+ Table 2
+
+
+
+CEPH outcome competencies:
+Students will be able to utilize basic epidemiological skills to approach a community health problem and use basic data for program design and implementation.
+
+
+\end{document}
