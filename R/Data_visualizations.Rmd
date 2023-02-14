@@ -59,7 +59,7 @@ plot(CIACountries$gdp,
      pch = 16, 
      col = "red", 
      xlim = c(0,150000), 
-     ylim = c(0,15))
+     ylim = c(0,10))
 ```
 
 Change the x and y limits 
@@ -138,7 +138,7 @@ Add axis labels
 ```{r}
 ggplot(aes(x = gdp, y = educ), data = CIACountries) +
   geom_point() + 
-  xlab("GDP") + 
+  xlab("GDP (Millions of $)") + 
   ylab("Education")
 ```
 
@@ -244,7 +244,13 @@ plot(dens$x, dens$y, type = "l")
 ggplot(aes(x = math), data = SAT_2010) + geom_density()
 
 #More jagged
-ggplot(aes(x = math), data = SAT_2010) + geom_density(bw = 0.01)
+ggplot(aes(x = math), data = SAT_2010) + geom_density(bw = 10)
+
+
+#A histogram and a density plot on the same plot!!!
+ggplot(aes(x = math), data = SAT_2010) + geom_histogram(aes(y = after_stat(density))) + geom_density(colour = "red") 
+
+ggplot(aes(x = math), data = SAT_2010) + geom_density(colour = "red")  + geom_histogram(aes(y = after_stat(density))) 
 ```
 
 ```{r}
@@ -281,13 +287,11 @@ ggplot(data = mosaicData::HELPrct, aes(x = homeless)) +
 
 ### Multivariate displays
 ```{r}
-
 g <- ggplot(
   data = SAT_2010, 
   aes(x = expenditure, y = math)
 ) + 
   geom_point()
-
 ```
  We can easily add a trend line with ggplot.  
 ```{r}
@@ -319,8 +323,8 @@ SAT_2010 <- SAT_2010 %>%
 
 
 #Full code: 
-ggplot(data = SAT_2010, aes(x = expenditure, y = math)) + 
-  geom_point(aes(color = SAT_rate)) + geom_smooth(aes(color = SAT_rate), method = "lm", se = FALSE) + scale_colour_brewer(palette = "Spectral") 
+ggplot(data = SAT_2010, aes(x = expenditure, y = math,color = SAT_rate)) + 
+  geom_point() + geom_smooth(aes(color = SAT_rate), method = "lm", se = FALSE) + scale_colour_brewer(palette = "Spectral") 
 ```
 
 ### Faceting
@@ -398,8 +402,8 @@ ggplot(
 ```{r}
 library(macleish)
 ggplot(data = whately_2015, aes(x = when, y = temperature)) + 
-  geom_line(color = "darkgray") + 
-  geom_smooth() + 
+  geom_line(color = "darkgreen") + 
+  geom_smooth(color = "pink") + 
   xlab(NULL) + 
   ylab("Temperature (degrees Celsius)")
 ```
@@ -437,6 +441,37 @@ ggplot(
 Check out the extended example here: https://mdsr-book.github.io/mdsr2e/ch-vizII.html#sec:babynames
 
 
+```{r}
+SAT_2010 <- SAT_2010 %>%
+  mutate(
+    SAT_rate = cut(
+      sat_pct, 
+      breaks = c(0, 30, 60, 100), 
+      labels = c("low", "medium", "high")
+    )
+  )
+
+median(SAT_2010$pupil_teacher_ratio)
+median(SAT_2010$salary)
+SAT_2010 <- SAT_2010 %>% mutate(ptr = ifelse(pupil_teacher_ratio > median(SAT_2010$pupil_teacher_ratio), "high","low"),
+      sal = ifelse(salary > median(SAT_2010$salary), "high","low"))
+
+ggplot(aes(x = math, y = read, color = SAT_rate), data = SAT_2010) + geom_point() + facet_grid(sal ~ ptr)
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
 # In class exercise
 Make these plots!
 
@@ -448,6 +483,31 @@ SAT_2010 <- SAT_2010 %>%
 library(ggplot2)
 ggplot(aes(x = math, y = read, col = SAT_rate), data = SAT_2010) + geom_point() + facet_grid(sal~ptr) 
 ```
+
+```{r echo = FALSE}
+library(mdsr)
+library(tidyverse)
+data(Cherry)
+
+sub <- Cherry %>% filter(year %in% c(1999, 2008))
+ggplot(aes(x = gun, color = sex), data = Cherry) + geom_density()
+ggplot(aes(x = gun, color = sex), data = Cherry) + geom_boxplot()
+ggplot(aes(x = gun, color = sex), data = Cherry) + geom_histogram()
+ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_histogram()
+ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_boxplot()
+ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_density(alpha = 0.5)
+
+
+
+
+ggplot(aes(x = gun), data = sub) + geom_boxplot() + coord_flip()
+ggplot(aes(x = gun, color = as.factor(year)), data = sub) + geom_density() 
+ggplot(aes(x = gun), data = sub) + geom_density() + facet_wrap( ~ year)
+
+ggplot(aes(y = gun, x = as.factor(nruns), color = sex), data = Cherry) + geom_boxplot() + facet_wrap( ~ year)
+
+```
+
 
 ```{r echo = FALSE}
 library(ggplot2)

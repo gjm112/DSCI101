@@ -120,9 +120,25 @@ tapply(my_CIACountries$area,my_CIACountries$high_educ, mean)
 
 ```
 
-##In class assignment: What first letter has the largest population? 
 
+##In class assignment: What first letter has the largest population? 
+```{r}
+CIACountries %>%
+  mutate(fletter = substring(country, 1, 1)) %>%
+  group_by(fletter) %>%
+  summarise(totalpop = sum(pop)) %>% 
+  arrange(-totalpop) %>% 
+  head(5)
+
+```
 #What proportion of countries produce any oil stratified by net users class? 
+```{r}
+CIACountries %>% 
+  mutate(anyoil = (oil_prod > 0)) %>% 
+  group_by(net_users) %>% 
+  summarise(oil_prop = mean(anyoil, na.rm = TRUE))
+```
+
 
 
 
