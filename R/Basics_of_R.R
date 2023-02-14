@@ -320,13 +320,7 @@ find_max(5,3)
 
 
 #Exercise!
-#The height of a lego brick is 9.6 mm. We want to build a tower at a height closest to x m.(Remember 1000 mm in a m.)
-
-#Imagine your starter code is: x=3 # I want to build a tower that is ~ 3 m high
-
-#1. Write a statement to calculate how many bricks are needed.
-#2. Write code using a while loop to calculate the number of bricks needed.
-
+#Write a function that will compute the sum of n terms of the alternating sequence from i = 1 to n  (-1)^(i+1)/i
 
 
 

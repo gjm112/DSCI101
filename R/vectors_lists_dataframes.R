@@ -233,8 +233,7 @@ arr[1, , 1]
 #I Lists are indexed with double brackets "[[]]" or with a "$name"
 
 #Create a list
-l <-
-  list(3, rep(0, 3), matrix(c(1:4), ncol = 2), paste("X", c(1:5), sep = ""))
+l <-  list(3, rep(0, 3), matrix(c(1:4), ncol = 2), paste("X", c(1:5), sep = ""))
 l
 
 #Another wany to create this list
@@ -246,6 +245,10 @@ l[[2]] <- rep(0, 3)
 l$three <- matrix(c(1:4), ncol = 2)
 l$four <- paste("X", c(1:5), sep = "")
 l
+
+l[[4]]
+l$four
+l[["four"]]
 
 #Let's look at the names
 names(l)
@@ -348,7 +351,7 @@ table(df$V6)
 cubs <- read.csv("https://raw.githubusercontent.com/gjm112/DSCI401/main/data/cubs_all_time.csv")
 
 sum(cubs$Attendance > 3000000)
-temp <- cubs$Attendance[!is.na(cubs$Attendance)]
+temp <- cubs$Attendance[!is.na (cubs$Attendance)]
 sum(temp > 3000000)
 
 library(tidyverse)
