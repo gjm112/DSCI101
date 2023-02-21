@@ -1,0 +1,71 @@
+---
+title: "Homework 2 Solutions"
+author: "Gregory J. Matthews"
+date: "2023-02-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Number 1
+```{r}
+library(Lahman)
+#1a
+Teams %>% filter(yearID %in% c(2000:2009)) %>% select(yearID, W, L)
+
+#1b 
+Teams %>% filter(teamID == "CHN" & HR > 200) %>% select(HR, W) %>% summarize(num_years = n(), med_wins = median(W))
+
+#1c
+Teams %>% group_by(yearID, lgID) %>% summarize(totHR = sum(HR)) %>% ggplot(aes(x = yearID, y = totHR, col = lgID)) + geom_line()
+
+#1d
+Teams %>% mutate(winning_record = W > L) %>% ggplot(aes(x = R, y = RA, color = winning_record)) + geom_point() + geom_abline(intercept = 0, slope = 1)
+
+#1e
+Teams %>% ggplot(aes(x = SO, y = BB)) + geom_point()
+
+#1f
+Teams %>% mutate(era = cut(yearID, c(0,1899,1949,1999,3000), labels = c("Pre1900","1900-1949","1950-1999","Post200"))) %>% ggplot(aes(x = SO, y = BB, color = era)) + geom_point()
+
+
+
+
+  
+  
+
+
+
+
+
+```
+
+
+
+# Number 2
+```{r}
+#2a
+library(nycflights13)
+flights %>% mutate(canceled = is.na(air_time)) %>% group_by(month) %>% summarize(prop = mean(canceled)) %>% arrange(-prop)
+
+#2b
+flights %>% filter(dep_delay > 0) %>% ggplot((aes(x = dep_delay))) + geom_histogram()
+
+#2c
+flights %>% filter(dep_delay > 0)  %>% ggplot((aes(x = dep_delay))) + geom_histogram() + facet_wrap(~month)
+
+#2d
+top5 <- flights %>% group_by(carrier) %>% summarize(totalflights = n()) %>% arrange(-totalflights) %>% head(5)
+
+flights %>% filter(dep_delay >= 60 & carrier %in% top5$carrier)  %>% ggplot(aes(x = carrier, y = dep_delay, color = carrier)) + geom_boxplot() + theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank() 
+        )
+```
+
+
+
+
+
+

@@ -489,20 +489,33 @@ library(mdsr)
 library(tidyverse)
 data(Cherry)
 
-sub <- Cherry %>% filter(year %in% c(1999, 2008))
+
+
+
+
 ggplot(aes(x = gun, color = sex), data = Cherry) + geom_density()
 ggplot(aes(x = gun, color = sex), data = Cherry) + geom_boxplot()
 ggplot(aes(x = gun, color = sex), data = Cherry) + geom_histogram()
 ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_histogram()
 ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_boxplot()
-ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_density(alpha = 0.5)
+ggplot(aes(x = gun, fill = sex), data = Cherry) + geom_density(alpha = 0.9)
 
+
+sub <- Cherry %>% filter(year %in% c(1999:2001))
+sub <- Cherry %>% filter(year >= 1999 & year <= 2001)
+sub <- Cherry %>% filter(year == 1999 | year == 2000 | year == 2001)
+
+
+sub <- Cherry %>% filter(year %in% c(1999, 2008))
+sub <- Cherry %>% filter(year == 1999 | year == 2008)
+ggplot(aes(x = gun), data = sub) + geom_density() + facet_wrap( ~ year)
+ggplot(aes(x = gun), data = Cherry) + geom_density() + facet_grid( ~ year)
 
 
 
 ggplot(aes(x = gun), data = sub) + geom_boxplot() + coord_flip()
 ggplot(aes(x = gun, color = as.factor(year)), data = sub) + geom_density() 
-ggplot(aes(x = gun), data = sub) + geom_density() + facet_wrap( ~ year)
+
 
 ggplot(aes(y = gun, x = as.factor(nruns), color = sex), data = Cherry) + geom_boxplot() + facet_wrap( ~ year)
 
@@ -530,5 +543,12 @@ ggplot(aes(x = salary, y = score, col = subject), data = dat) + geom_point() + g
 
 ```
 
+```{r}
+library(Lahman)
+Teams %>% filter(teamID == "CHN") %>% count(HR >= 200)
+Teams %>% filter(teamID == "CHN" & HR >= 200) %>% summarise(median(W))
 
+ggplot(aes(x = yearID, y = HR), data = Teams) + geom_line() + facet_wrap( ~ lgID) + geom_smooth()
+
+```
  
