@@ -117,10 +117,79 @@ People %>%
 #Question 2: In terms of number of HRs hit, what AGES were his five best? 
 #Question 3: What fraction of total homeruns in the league did Manny hit in each of his seasons?   
 
+#Question 1: How many years did Joe Mauer hit more than 20 HRs?
+#Question 2: In terms of number of HRs hit, what AGES were his five best? 
+#Question 3: What fraction of total homeruns in the league did Joe Mauer hit in each of his seasons?   
+
+
+out <- Batting %>% left_join(People, by = c("playerID" = "playerID")) %>% filter(nameFirst == "Joe" & nameLast == "Mauer") %>% mutate(age = yearID - birthYear) %>% arrange(-HR) %>% head(5) %>% select(nameFirst, nameLast, age, yearID, HR)
+
+
+
+
+#Step 1: 
+library(Lahman)
+#yearID and Homeruns for Joe Mauer
+joe <- Batting %>% left_join(People, by = c("playerID" = "playerID")) %>% filter(nameFirst == "Joe" & nameLast == "Mauer") %>% select(yearID, HR)
+
+#Step 
+totes <- Batting %>% group_by(yearID) %>% summarize(totalHR = sum(HR)) 
+
+
+
+#Now I want to left join 
+joe %>% left_join(totes, by = c("yearID"="yearID")) %>% mutate(prop = HR/totalHR) %>% arrange(prop)
+
+(Batting %>% left_join(People, by = c("playerID" = "playerID")) %>% filter(nameFirst == "Joe" & nameLast == "Mauer") %>% select(yearID, HR)) %>% left_join((Batting %>% group_by(yearID) %>% summarize(totalHR = sum(HR)) ), by = c("yearID"="yearID")) %>% mutate(prop = HR/totalHR) %>% arrange(-prop)
+
+
+
+
+```
+
+```{r}
+manny_people <- People %>% 
+  filter(nameLast == "Ramirez" & nameFirst == "Manny")
+
+
+manny %>% group_by(yearID) %>% summarise(HRt = sum(HR)) %>% filter(HRt > 30)
+
+#Ages
+manny %>% left_join(manny_people, by = c("playerID" = "playerID")) %>% mutate(age = yearID - birthYear) %>% group_by(age) %>% summarise(HRt = sum(HR)) %>% arrange(desc(HRt))
+
+#
+lg <- Batting %>% 
+  group_by(yearID) %>% summarise(HRt_league = sum(HR))
+
+manny_tot <- manny %>% group_by(yearID) %>% summarise(HRt_manny = sum(HR)) 
+manny_tot %>% left_join(lg, by = c("yearID" = "yearID")) %>% mutate(fraction = HRt_manny/HRt_league) %>% arrange(desc(fraction))
 ```
 
 
+```{r}
+data1 <- data.frame(key = c("a","b","c"), score = c(1:3))
+data2 <- data.frame(key = c("a","a","b","c"), points = c(1:4))
+data3 <- data.frame(key = c("a","a","a","b","d","e","e","e"), money = c(1:8))
 
+library(tidyverse)
+#How many rows should the output have? 
+data1 %>% inner_join(data2, by = c("key" = "key"))
+data1 %>% inner_join(data3, by = c("key" = "key"))
+data2 %>% inner_join(data3, by = c("key" = "key"))
+
+data1 %>% left_join(data2, by = c("key" = "key"))
+data1 %>% left_join(data3, by = c("key" = "key"))
+data2 %>% left_join(data3, by = c("key" = "key"))
+
+data2 %>% left_join(data1, by = c("key" = "key"))
+data3 %>% left_join(data1, by = c("key" = "key"))
+data3 %>% left_join(data2, by = c("key" = "key"))
+
+data1 %>% full_join(data2, by = c("key" = "key"))
+data1 %>% full_join(data3, by = c("key" = "key"))
+data2 %>% full_join(data3, by = c("key" = "key"))
+
+```
 
 
 
