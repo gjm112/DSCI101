@@ -173,7 +173,7 @@ data3 <- data.frame(key = c("a","a","a","b","d","e","e","e"), money = c(1:8))
 
 library(tidyverse)
 #How many rows should the output have? 
-data1 %>% inner_join(data2, by = c("key" = "key"))
+data1 %>% inner_join(data2, by = c("key" = "key")) # 
 data1 %>% inner_join(data3, by = c("key" = "key"))
 data2 %>% inner_join(data3, by = c("key" = "key"))
 
