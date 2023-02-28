@@ -53,16 +53,72 @@ BP_wide %>%
   pivot_longer(c(before, after), names_to = "when", values_to = "sbp")
 ```
 
+```{r}
+library(tidyverse)
+library(babynames)
+#Summarise across sex
+names <- babynames %>% group_by(name, year) %>% summarise(n = sum(n))
+#get totals
+totals <- babynames %>% group_by(year) %>% summarise(n_total = sum(n))
 
+dat <- names %>% left_join(totals, by = c("year" = "year")) %>% mutate(prop = n / n_total) %>% filter(year %in% c(1900,1950,2000)) %>% select(name, year, prop) %>%  pivot_wider(names_from = year, values_from = prop) %>% mutate(`1900` = replace_na(`1900`, 0),
+                                     `1950` = replace_na(`1950`, 0),
+                                     `2000` = replace_na(`2000`, 0)) %>% select(name,`1900`,`1950`,`2000`)
+
+dat %>% mutate(diff1950_1900 = `1950` - `1900`,
+               diff2000_1950 = `2000` - `1950`) %>% arrange(diff1950_1900)
+
+dat %>% mutate(diff1950_1900 = `1950` - `1900`,
+               diff2000_1950 = `2000` - `1950`) %>% arrange(-diff2000_1950)
+
+
+#Ratios of proprtions
+dat %>% mutate(rat1950_1900 = `1950` / `1900`,
+               rat2000_1950 = `2000` / `1950`) %>% arrange(-rat2000_1950) %>% filter(`1950` > 0)
+
+
+top1900 <- babynames %>% filter(sex == "F" & year == 1900) %>% arrange(-n) %>% head(100) %>% mutate(rank1900 = 1:100) %>% select(name,rank1900)
+
+top1950 <- babynames %>% filter(sex == "F" & year == 1950) %>% arrange(-n) %>% head(100) %>% mutate(rank1950 = 1:100) %>% select(name,rank1950)
+
+top2000 <- babynames %>% filter(sex == "F" & year == 2000) %>% arrange(-n) %>% head(100) %>% mutate(rank2000 = 1:100) %>% select(name,rank2000)
+
+top1900 %>% inner_join(top1950, by = c("name" = "name")) %>% inner_join(top2000, by = c("name" = "name")) 
+
+
+
+
+  ```
 ## Example 
 In class exercises: 
  - Find the most gender neutral name
  - What name saw the biggest drop from 1900 to 1950?  How about from 1950 to 2000?  
-```{r}
+ - Make a table that has female names that were in the top 100 in 1900, 1950, and 2000 and display their rank in all those years.  
 
+ library(tidyverse)
+ library(babynames)
+  dat1900 <- babynames %>% filter(year == 1900 & sex == "F") %>% arrange(-n) %>% head(100) %>% mutate(rank1900 = 1:100) %>% select(name, rank1900)
+  dat1950 <- babynames %>% filter(year == 1950 & sex == "F") %>% arrange(-n) %>% head(100) %>% mutate(rank1950 = 1:100) %>% select(name, rank1950)
+  dat2000 <- babynames %>% filter(year == 2000 & sex == "F") %>% arrange(-n) %>% head(100) %>% mutate(rank2000 = 1:100) %>% select(name, rank2000)
+   
+   dat1900 %>% inner_join(dat1950, by = c("name" = "name")) %>% inner_join(dat2000, by = c("name" = "name"))
+  
+ 
+ - Create a table where the rows are the first letter of a name (vowels only) and the columns are the years 1900 though 2000 by tens and the table is population with the total numbers of names beginning with the letter in the target years.  
+ 
+ 
+ - Now create a line plot with first letter (vowels only) as the color, x axis is year, y axis is count of names beginning with each letter for ALL years in the data set.    
+   - Same as before, but facet by sex.
+   - 
+   
+ 
+ 
+```{r}
 library(babynames)
 babynames
 #write.csv(babynames, file = "./data/babynames.csv", row.names = FALSE)
+
+babynames %>% group_by(name, sex) %>% summarize(n = sum(n)) %>%  pivot_wider(names_from = sex, values_from = n) %>% mutate(prop = M/(M+F)) %>% filter(!is.na(prop)) %>% mutate(diff = abs(0.5 - prop)) %>% arrange(diff) %>% filter(M > 100000 & F > 100000) %>% head(20)
 ```
 
 

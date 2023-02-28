@@ -173,20 +173,20 @@ data3 <- data.frame(key = c("a","a","a","b","d","e","e","e"), money = c(1:8))
 
 library(tidyverse)
 #How many rows should the output have? 
-data1 %>% inner_join(data2, by = c("key" = "key")) # 
-data1 %>% inner_join(data3, by = c("key" = "key"))
-data2 %>% inner_join(data3, by = c("key" = "key"))
+data1 %>% inner_join(data2, by = c("key" = "key")) #4
+data1 %>% inner_join(data3, by = c("key" = "key")) #4
+data2 %>% inner_join(data3, by = c("key" = "key")) #7
 
-data1 %>% left_join(data2, by = c("key" = "key"))
-data1 %>% left_join(data3, by = c("key" = "key"))
-data2 %>% left_join(data3, by = c("key" = "key"))
+data1 %>% left_join(data2, by = c("key" = "key")) #4
+data1 %>% left_join(data3, by = c("key" = "key")) #5
+data2 %>% left_join(data3, by = c("key" = "key")) #8
 
-data2 %>% left_join(data1, by = c("key" = "key"))
-data3 %>% left_join(data1, by = c("key" = "key"))
-data3 %>% left_join(data2, by = c("key" = "key"))
+data2 %>% left_join(data1, by = c("key" = "key")) #4
+data3 %>% left_join(data1, by = c("key" = "key")) #8
+data3 %>% left_join(data2, by = c("key" = "key")) #11
 
-data1 %>% full_join(data2, by = c("key" = "key"))
-data1 %>% full_join(data3, by = c("key" = "key"))
+data1 %>% full_join(data2, by = c("key" = "key")) #4
+data1 %>% full_join(data3, by = c("key" = "key")) #9
 data2 %>% full_join(data3, by = c("key" = "key"))
 
 ```
