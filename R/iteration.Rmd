@@ -1,7 +1,7 @@
 ---
 title: "Iteration"
 author: "Gregory J. Matthews"
-date: "10/12/2022"
+date: "3/24/2023"
 output: html_document
 ---
 
@@ -9,6 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+## New functions!
+ - Vectorize: used to vectorize a function
+ - across: Apply a function acress multiple columns
+ - map family: Apply a function to each element of a list or atomic vector
 
 ## Vectorized Operations
 ```{r}
@@ -58,6 +63,17 @@ f(1:3)
 ```
 
 
+```{r}
+library(bench)
+library(tidyverse)
+x <- 1:1e5
+bench::mark(
+  exp(x),
+  map_dbl(x, exp)
+)
+```
+
+## Map functions
 ```{r}
 #old school apply family.  
 Teams_sub <- Teams[,unlist(lapply(Teams, is.numeric))]
@@ -187,6 +203,8 @@ hr_leaders %>%
 
 ```
 
+
+
 #Simulation
 
 #Bootstrapping
@@ -223,9 +241,6 @@ mn <- 1:nsim %>% map_dbl( ~ inside_circle()) %>% mean()
 
 ```
  
-
-
-
 
 
 

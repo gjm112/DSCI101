@@ -61,6 +61,7 @@ if (window.hljs) {
 
 
 
+
 <style type="text/css">
 .main-container {
   max-width: 940px;
@@ -82,6 +83,9 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
 pre code {
   padding: 0;
 }
@@ -101,8 +105,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -110,16 +114,9 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -179,12 +176,12 @@ pre code {
 <h2>Reshaping Data</h2>
 <pre class="r"><code>library(mdsr)
 library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.3.5      ✔ purrr   0.3.4 
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
 ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.0      ✔ stringr 1.4.0 
-## ✔ readr   2.1.0      ✔ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>BP_wide &lt;- data.frame(subject = c(&quot;BHO&quot;,&quot;GWB&quot;,&quot;WJC&quot;),
@@ -234,6 +231,17 @@ BP_narrow                </code></pre>
 ## 4 GWB     after    135
 ## 5 WJC     before   105
 ## 6 WJC     after    145</code></pre>
+<pre class="r"><code>BP_wide %&gt;% 
+  pivot_longer(c(before, after), names_to = &quot;when&quot;, values_to = &quot;sbp&quot;)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   subject when     sbp
+##   &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;
+## 1 BHO     before   160
+## 2 BHO     after    115
+## 3 GWB     before   120
+## 4 GWB     after    135
+## 5 WJC     before   105
+## 6 WJC     after    145</code></pre>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
@@ -255,6 +263,10 @@ babynames</code></pre>
 ## 10  1880 F     Sarah      1288 0.0132
 ## # … with 1,924,655 more rows</code></pre>
 <pre class="r"><code>#write.csv(babynames, file = &quot;./data/babynames.csv&quot;, row.names = FALSE)</code></pre>
+<pre class="r"><code>library(tidyverse)
+test &lt;- babynames %&gt;% group_by(name,sex) %&gt;% summarise(total = sum(n)) %&gt;% pivot_wider(names_from = sex, values_from = total) %&gt;% mutate(ratio = M/(M+F)) %&gt;% mutate(balanced = abs(ratio - .5)) %&gt;% filter(M &gt; 1000 &amp; F &gt; 1000) %&gt;% arrange(balanced) </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;name&#39;. You can override using the
+## `.groups` argument.</code></pre>
 </div>
 
 
