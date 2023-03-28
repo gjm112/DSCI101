@@ -252,13 +252,16 @@ hr_leaders %>%
 
 
 
+
 #Simulation
+
 ```{r}
 #Random number generation
 #With replacement
 sample(1:6, 3, replace = TRUE)
 #Without replacement
 sample(1:6, 3, replace = FALSE)
+
 #Sampling from a uniform distribution 
 runif(5,0,1)
 
@@ -266,10 +269,11 @@ runif(5,0,1)
 any6 <- function(i){
   any(sample(1:6,4, replace = TRUE) == 6)
 }
-results <- map_dbl(1:100000,any6)
+results <- map_dbl(1:1000000,any6)
 mean(results)
 
 #This is monte carlo simulation!
+1-(5/6)^4
 ```
 
 ```{r}
@@ -284,7 +288,7 @@ any6n <- function(n,niter = 10000){
 }
 
 any6n(1)
-results <- map_dbl(1:100, any6n, niter = 10000)
+results <- map_dbl(1:100, any6n)
 
 df <- data.frame(ndice = 1:100, prob = results)
 ggplot(aes(x = ndice, y = prob), data = df) + geom_line()
@@ -308,6 +312,19 @@ hist(boots)
  - Randomly sample from a square with side length = 2.  Check to see if the random draw is inside the unit circle.  Use this to simulate pi.  
  - The number of hurricanes in a given year in Florida is approximately Poisson with lambda = 3.2 (I made this up).  There is a 20% chance that every hurricane will be ``severe".  If a hurricane is severe, the monetary amount of damage done will follow an exponential distribution with mean \$400 million.  Assume that if a hurricane is not severe, then the amount of damage is \$0.  What is the average monetary amount of damage per year?  What is the probability that the amount of damage is over \$1 billion in a given year?
  
+```{r}
+damagecost <- function(i){
+ numhurr <- rpois(1,3.2)
+ numsev <- rbinom(1,numhurr,0.2)
+ out <- sum(rexp(numsev, 1/400000000))
+ return(out)
+}
+
+results <- map_dbl(1:10000, damagecost)
+mean(results)
+mean(results > 1000000000)
+```
+ 
  
  
 ```{r} 
@@ -321,6 +338,7 @@ inside_circle <- function(){
 #Now use map to simulate this many times
 nsim <- 1000000
 mn <- 1:nsim %>% map_dbl( ~ inside_circle()) %>% mean()
+mn <- map_dbl(1:nsim , inside_circle()) %>% mean()
 
 #Now compute pi
 4*mn 
