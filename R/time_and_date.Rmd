@@ -21,7 +21,7 @@ date()
 ```  
 #Adding and subtracting dates
 ```{r}
-dates <- c("1982-07-25","2022-11-07")
+dates <- c("1982-07-25","2023-04-04")
 class(dates)
 #Converts character to a date
 dates <- as.Date(dates)
@@ -59,7 +59,7 @@ as.Date(dates)
 
 dates <- c("7/25/82","7/25/82")
 #This doesn't work!
-as.Date(dates)
+#as.Date(dates)
 #Must specify the format
 as.Date(dates, "%m/%d/%y")
 #Once you do that, you can change the format
@@ -109,7 +109,6 @@ force_tz(time, "America/Chicago")
 ```
 ```{r}
 library(nycflights13)
-
 ins <- read.csv("/Users/gregorymatthews/Dropbox/Public/inspections_clean.csv")
 
 ```
@@ -118,6 +117,23 @@ ins <- read.csv("/Users/gregorymatthews/Dropbox/Public/inspections_clean.csv")
  - What day of the week do the most inspections occur. 
  - What is the pass rate (i.e. results == "Pass") of each month for all inspections and which month had the lowest pass rate.  
 
+
+```{r}
+library(tidyverse)
+ins$inspection_date <- as.Date(ins$inspection_date)
+
+sub<- ins %>% mutate(dow = wday(inspection_date, label = TRUE)) %>% group_by(dow, inspection_type) %>% summarize(count = n()) 
+
+g <- ggplot(aes(x = dow, y = count, fill = inspection_type), data = sub) + geom_bar(stat = "identity")
+
+ggplotly(g)
+
+```
+
+```{r}
+#https://www.dropbox.com/s/b479vozvacya739/fitBitData20160630.RData?dl=0
+load("/Users/gregorymatthews/Dropbox/Rart/DataArtProject/fitBitData20160630.RData")
+```
  
  
  
