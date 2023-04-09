@@ -110,7 +110,6 @@ force_tz(time, "America/Chicago")
 ```{r}
 library(nycflights13)
 ins <- read.csv("/Users/gregorymatthews/Dropbox/Public/inspections_clean.csv")
-
 ```
 
 # In class questions
@@ -131,8 +130,44 @@ ggplotly(g)
 ```
 
 ```{r}
+ins <- read.csv("/Users/gregorymatthews/Dropbox/Public/inspections_clean.csv")
+library(tidyverse)
+library(lubridate)
+#Pass rate by month
+ins %>% mutate(inspection_date = as.Date(inspection_date), 
+                      month = month(inspection_date, label = TRUE)) %>% group_by(month) %>% summarize(pass_rate = mean(results == "Pass")) %>% arrange(pass_rate)
+
+
+#Number of inspections by month day
+#Pass rate by month
+ins %>% mutate(date = as.Date(inspection_date), 
+                      dayofmonth = mday(date)) %>% group_by(dayofmonth) %>% summarize(num_ins = n()) %>% arrange(num_ins)
+
+
+
+
+#Average number of tests by day of month
+sub <- ins %>% mutate(date = as.Date(inspection_date), 
+               month = month(date),
+              dayofmonth = mday(date)) %>% group_by(month,dayofmonth) %>% summarize(num_ins = n()) %>% group_by(dayofmonth) %>% summarize(mn_ins = mean(num_ins), count = n()) %>% arrange(-mn_ins)
+
+ggplot(aes(x = dayofmonth, y = mn_ins), data = sub) + geom_point() + geom_line()
+
+
+
+```
+
+```{r}
 #https://www.dropbox.com/s/b479vozvacya739/fitBitData20160630.RData?dl=0
 load("/Users/gregorymatthews/Dropbox/Rart/DataArtProject/fitBitData20160630.RData")
+
+steps[1,]
+sleep[1,]
+hr[1,]
+load("/Users/gregorymatthews/Dropbox/Rart/DataArtProject/fitBitData20160630.RData")
+sub <- hr %>% mutate(dateTime2 = as.POSIXct(hr$dateTime,format = "%Y-%m-%d %H:%M:%OS"), month = month(dateTime2), hour = hour(dateTime2) + minute(dateTime2)/60 + second(dateTime2)/3600) %>% group_by(hour, month) %>% summarize(mn = mean(`heart-rate`, na.rm = TRUE))
+
+ggplot(aes(x = hour, y = mn, colour = factor(month)), data = sub ) + geom_line() + geom_point() +geom_smooth()
 ```
  
  
