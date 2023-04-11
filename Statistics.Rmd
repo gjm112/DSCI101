@@ -1,0 +1,99 @@
+---
+title: "Statistical Foundations"
+author: "Gregory J. Matthews"
+date: "2023-04-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Statistical Foundations
+
+ - Population vs Sample
+ - Sample Statistics: What is a "statistic"?
+ - Sampling Distribution
+ - Bootstrapping
+ - Outliers
+ - Statistical Models
+ - Confounding and accounting for other factors
+ - p-values
+ 
+### Population vs Sample 
+ - Population is EVERYTHING. 
+ - Sample is a subset of the population!
+
+### Sample Statstics
+  - What is a "statistic"?
+
+### Sampling Distribution
+  - How accurate is my statistic?  
+  - Let's create a population and 
+ 
+### The Bootstrap
+ - Estimating standard errors.
+
+### Outliers
+"Outliers can often tell us interesting things. How they should be handled depends on their cause. Outliers due to data irregularities or errors should be fixed. Other outliers may yield important insights. Outliers should never be dropped unless there is a clear rationale. If outliers are dropped this should be clearly reported." - Baumer and Horton
+
+### Statistical Models
+ - Structures that allow us to relate variables to one another
+
+### Confounding and accounting for other factors
+ - Correlation does not imply causation! But WHY!?!?!?!
+ 
+```{r}
+library(mdsr)
+library(tidyverse)
+ SAT_2010 <- SAT_2010 %>%
+  mutate(Salary = salary/1000)
+SAT_plot <- ggplot(data = SAT_2010, aes(x = Salary, y = total)) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  ylab("Average total score on the SAT") + 
+  xlab("Average teacher salary (thousands of USD)")
+SAT_plot
+```
+
+```{r}
+SAT_mod1 <- lm(total ~ Salary, data = SAT_2010)
+broom::tidy(SAT_mod1)
+```
+```{r}
+SAT_2010 %>%
+  skim(sat_pct)
+```
+
+
+```{r}
+SAT_2010 <- SAT_2010 %>%
+  mutate(SAT_grp = ifelse(sat_pct <= 27, "Low", "High"))
+SAT_2010 %>%
+  group_by(SAT_grp) %>%
+  count()
+```
+
+```{r}
+SAT_plot %+% SAT_2010 + 
+  aes(color = SAT_grp) + 
+  scale_color_brewer("% taking\nthe SAT", palette = "Set2")
+```
+
+Famous Example of this: "Sex Bias in Graduate Admissions: Data from Berkley". Bickel, Hammell, and O'Connel, Science, Vol. 187, No. 4175, pp. 398-404.
+
+
+### The perils of the p-value
+"Always report the actual p-value (or a statement that it is less than some small value such as p < 0.0001) rather than just the decision (reject null vs. fail to reject the null). In addition, confidence intervals are often more interpretable and should be reported as well." - Baumer and Horton
+
+Important paper: Wasserstein and Lazar, 2016
+
+To help clarify these issues, the American Statistical Association endorsed a statement on p-values (Wasserstein and Lazar 2016) that laid out six useful principles:
+
+- p-values can indicate how incompatible the data are with a specified statistical model.
+- p-values do not measure the probability that the studied hypothesis is true, or the probability that the data were produced by random chance alone.
+- Scientific conclusions and business or policy decisions should not be based only on whether a p-value passes a specific threshold.
+- Proper inference requires full reporting and transparency.
+- A p-value, or statistical significance, does not measure the size of an effect or the importance of a result.
+- By itself, a p-value does not provide a good measure of evidence regarding a model or hypothesis.
+
