@@ -30,15 +30,99 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Sampling Distribution
   - How accurate is my statistic?  
   - Let's create a population and 
+  
+  
+```{r}
+set.seed(1234)
+N <- 1000000
+pop <- rnorm(N, 0, 1)
+
+n <- 100
+d <- sample(pop,n, replace = FALSE)
+xbar <- mean(d)
+xbar
+
+getxbar <- function(i){
+n <- 100
+d <- sample(pop,n, replace = FALSE)
+xbar <- mean(d)
+return(xbar)
+}
+
+library(tidyverse)
+nsim <- 10000
+results <- map(1:nsim, getxbar)
+hist(unlist(results))
+unlist(results)
+#sd = 0.1009027
+
+getxbar <- function(i){
+n <- 1000
+d <- sample(pop,n, replace = FALSE)
+xbar <- mean(d)
+return(xbar)
+}
+
+library(tidyverse)
+nsim <- 10000
+results <- map(1:nsim, getxbar)
+hist(unlist(results))
+#sd = 0.03159831
+
+getmedian <- function(i){
+n <- 1000
+d <- sample(pop,n, replace = FALSE)
+xbar <- median(d)
+return(xbar)
+}
+
+library(tidyverse)
+nsim <- 10000
+results <- map(1:nsim, getmedian)
+hist(unlist(results))
+sd(unlist(results))
+#sd =  0.04008901
+
+
+```
  
 ### The Bootstrap
  - Estimating standard errors.
+ 
+ 
+```{r}
+set.seed(1234)
+N <- 1000000
+pop <- rnorm(N, 0, 1)
+
+n <- 100
+d <- sample(pop,n, replace = FALSE)
+xbar <- mean(d)
+xbar
+
+bootxbar <- function(i){
+n <- length(d)
+dboot <- sample(d,n, replace = TRUE)
+xbar <- mean(dboot)
+return(xbar)
+}
+
+nsim <- 10000
+results <- map_dbl(1:nsim, bootxbar)
+hist(results)
+sd(results)
+
+
+
+
+```
 
 ### Outliers
 "Outliers can often tell us interesting things. How they should be handled depends on their cause. Outliers due to data irregularities or errors should be fixed. Other outliers may yield important insights. Outliers should never be dropped unless there is a clear rationale. If outliers are dropped this should be clearly reported." - Baumer and Horton
 
 ### Statistical Models
  - Structures that allow us to relate variables to one another
+ - Famous Quote: "All models are wrong, but some are useful".  
 
 ### Confounding and accounting for other factors
  - Correlation does not imply causation! But WHY!?!?!?!
