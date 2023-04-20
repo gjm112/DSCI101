@@ -181,3 +181,106 @@ To help clarify these issues, the American Statistical Association endorsed a st
 - A p-value, or statistical significance, does not measure the size of an effect or the importance of a result.
 - By itself, a p-value does not provide a good measure of evidence regarding a model or hypothesis.
 
+
+### Predictive modeling 
+- Inference vs prediction
+- Cross Validation
+- Bias vs Variance trade off
+- An example.  Trying to predict "high incomes" (>$50K)
+```{r}
+library(tidyverse)
+library(mdsr)
+url <-
+"http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"
+census <- read_csv(
+  url,
+  col_names = c(
+    "age", "workclass", "fnlwgt", "education", 
+    "education_1", "marital_status", "occupation", "relationship", 
+    "race", "sex", "capital_gain", "capital_loss", "hours_per_week", 
+    "native_country", "income"
+  )
+) %>%
+  mutate(income = factor(income))
+glimpse(census)
+
+library(tidymodels)
+set.seed(364)
+n <- nrow(census)
+census_parts <- census %>%
+  initial_split(prop = 0.8)
+
+train <- census_parts %>%
+  training()
+
+test <- census_parts %>%
+  testing()
+
+list(train, test) %>%
+  map_int(nrow)
+
+
+pi_bar <- train %>%
+  count(income) %>%
+  mutate(pct = n / sum(n)) %>%
+  filter(income == ">50K") %>%
+  pull(pct)
+#fraction of high earners.
+pi_bar
+
+mod_null <- logistic_reg(mode = "classification") %>%
+  set_engine("glm") %>%
+  fit(income ~ 1, data = train)
+
+
+library(yardstick)
+pred <- train %>%
+  select(income, capital_gain) %>%
+  bind_cols(
+    predict(mod_null, new_data = train, type = "class")
+  ) %>%
+  rename(income_null = .pred_class)
+accuracy(pred, income, income_null)
+
+confusion_null <- pred %>%
+  conf_mat(truth = income, estimate = income_null)
+confusion_null
+
+mod_log_1 <- logistic_reg(mode = "classification") %>%
+  set_engine("glm") %>%
+  fit(income ~ capital_gain, data = train)
+
+
+train_plus <- train %>%
+  mutate(high_earner = as.integer(income == ">50K"))
+
+ggplot(train_plus, aes(x = capital_gain, y = high_earner)) + 
+  geom_count(
+    position = position_jitter(width = 0, height = 0.05), 
+    alpha = 0.5
+  ) + 
+  geom_smooth(
+    method = "glm", method.args = list(family = "binomial"), 
+    color = "dodgerblue", lty = 2, se = FALSE
+  ) + 
+  geom_hline(aes(yintercept = 0.5), linetype = 3) + 
+  scale_x_log10(labels = scales::dollar)
+
+pred <- pred %>%
+  bind_cols(
+    predict(mod_log_1, new_data = train, type = "class")
+  ) %>%
+  rename(income_log_1 = .pred_class)
+
+confusion_log_1 <- pred %>%
+  conf_mat(truth = income, estimate = income_log_1)
+
+confusion_log_1
+
+accuracy(pred, income, income_log_1)
+
+broom::tidy(mod_log_1)
+
+exp(- 1.37 + 0.000335*10000)/(1+exp(- 1.37 + 0.000335*10000))
+
+```
