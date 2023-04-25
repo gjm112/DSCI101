@@ -232,6 +232,7 @@ mod_null <- logistic_reg(mode = "classification") %>%
   set_engine("glm") %>%
   fit(income ~ 1, data = train)
 
+exp(-1.146) /(1+exp(-1.146 ))
 
 library(yardstick)
 pred <- train %>%
@@ -241,6 +242,8 @@ pred <- train %>%
   ) %>%
   rename(income_null = .pred_class)
 accuracy(pred, income, income_null)
+
+
 
 confusion_null <- pred %>%
   conf_mat(truth = income, estimate = income_null)
@@ -281,6 +284,13 @@ accuracy(pred, income, income_log_1)
 
 broom::tidy(mod_log_1)
 
+#Predicted probability
+#Capital gains = 100
+exp(- 1.37 + 0.000335*100)/(1+exp(- 1.37 + 0.000335*100))
+
+#Capital gains = 10000
 exp(- 1.37 + 0.000335*10000)/(1+exp(- 1.37 + 0.000335*10000))
+#Capital gains = 100000
+exp(- 1.37 + 0.000335*100000)/(1+exp(- 1.37 + 0.000335*100000))
 
 ```
