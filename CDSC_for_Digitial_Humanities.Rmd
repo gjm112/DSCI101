@@ -1,0 +1,684 @@
+---
+title: "Digital Humanities Intro to R"
+author: "Gregory J. Matthews"
+date: "2023-11-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Contents 
+ - Basic of R
+ - Data Structures
+ - Input and output
+ - Tidyverse
+ - Data Viz
+ - Clustering Example (time permitting)
+
+## Intro to R and R Studio 
+ - R is a language
+ - R Studio is an integrated development environment (IDE)
+
+## Basics of R
+
+```{r}
+####################################
+#Basics of R
+####################################
+
+#Big note!
+# R starts indexing at 1 NOT ZERO!!!!!
+
+####################################
+#Assignment
+####################################
+#Preferred syntax
+height <- 442
+
+#These also work
+442 -> height
+height = 442
+
+print(height)
+#don't need print in R
+height
+
+####################################
+#Comments
+####################################
+#This is how you make a comment!
+
+####################################
+#Variables
+####################################
+#Default to numeric
+height <- 442 
+class(height)
+
+height <- 442.0
+class(height)
+
+#Character
+height <- "really tall"
+class(height)
+
+#Can force it to be an integer
+height <- as.integer(442)
+class(height)
+object.size(height)
+
+####################################
+#R is case sensitive
+####################################
+#These are all different objects
+name <- "greg" 
+Name <- "steve"
+NAME <- "mary"
+
+####################################
+#Conditional Statements
+####################################
+#If
+sky <- "sunny"
+if (sky == "sunny"){
+  print("Leave your umbrella at home!")
+}
+
+sky <- "cloudy"
+if (sky == "sunny"){
+  print("Leave your umbrella at home!")
+}
+
+#Ifelse
+
+sky <- "cellphone"
+if (sky == "sunny"){
+  print("Leave your umbrella at home!")
+} else {
+  print("Bring your umbrella")
+}
+
+#Nested
+sky <- "sunny"
+if (sky == "sunny") {
+  print("Leave your umbrella at home!")
+} else {
+  if (sky == "cloudy") {
+    print("Bring your umbrella")
+  } else {
+    if (sky == "snowing") {
+      print("Grab your parka")
+    } else {
+      print("Your guess is as good as mine")
+    }
+  }
+}
+
+#But we can use elseif 
+sky <- "dsfsad"
+if (sky == "sunny") {
+  print("Leave your umbrella at home!")
+} else if (sky == "cloudy") {
+  print("Bring your umbrella")
+} else if (sky == "snowing") {
+  print("Grab your parka")
+} else {
+  print("Your guess is as good as mine")
+}
+  
+#There is also the function ifelse
+sky <- "sunny"
+#ifelse(test,yes,no)
+ifelse(sky == "sunny","Sunny","not sunny")
+#No print statement needed!
+
+####################################
+#Conditional Statements
+####################################
+#Booleans
+#TRUE and FALSE
+#Need to be all capital letters!
+a <- TRUE
+b <- FALSE
+#TRUE is a 1; FALSE is a 0
+4 + a
+
+d <- 0
+if (d == FALSE){
+  print("d is FALSE")
+}
+
+#also works
+d <- TRUE
+if (d){
+  print("d is TRUE")
+}
+
+
+#Also works
+d <- 1
+if (d){
+  print("d is TRUE")
+}
+
+#Integers
+a <- as.integer(37)
+class(a)
+
+#Floating Points / Numeric
+b <- 37
+class(b)
+
+#Complex numbers
+#We won't really use these this semester.  Or ever?
+z <- 1 + 2i
+class(z)
+
+
+#Operations
+#Add
+3 + 3
+#Subtract
+6 - 3
+#multiply
+4 * 3
+#divide
+6 / 2
+#floored quotient
+floor(7 / 2)
+#ceiling quotient
+ceiling(7 / 2)
+#remainder or modulus
+7 %% 2
+#absolute value
+abs(-5)
+#Complex numbers
+4 + 7i
+class(4 + 7i)
+#Complex(length,real,imaginary)
+#This will recycle as needed
+complex(3,4,7:5)
+#exponents
+3^4
+3**4
+
+#Convert to different types
+#Convert numeric to integer
+a <- 5
+class(a)
+a
+a <- as.integer(a)
+class(a)
+
+#Convert character to numberic
+#Works if the character is a number
+a <- "5"
+class(a)
+a <- as.numeric(a)
+a
+class(a)
+
+#Convert a character to a numeric
+#This doesn't work
+a <- "five"
+class(a)
+a <- as.numeric(a)
+a
+class(a)
+
+#Convert a numeric to a character
+a <- 5
+class(a)
+a <- as.character(a)
+a
+class(a)
+
+
+
+#Comparisons
+# > Greater than
+# < Less than
+# >= Greater than or equal
+# <= Less than or equal
+# != Not equal
+
+a <- 1
+b <- 2
+c <- 3
+if (b >= a & b <= c){
+  print("b is between a and c")
+}
+
+a <- 1
+b <- 2
+c <- 3
+if (!(b < a | b > c)){
+  print("b is between a and c")
+}
+
+#floating points numbers are inexact decimal values 
+a <- 2.1 + 4.2
+a == 6.3
+a
+class(a)
+
+#Also numeric
+a <- 3e3
+class(a)
+
+#Operations
+a <- 1/2 
+b <- 10
+#Square root
+sqrt(a)
+#Trig
+sin(a)
+cos(a)
+tan(a)
+#Log base e
+log(a)
+#log base b
+log(a, b)
+#exponentiate
+exp(a)
+
+#Functions
+#This function will return the larger of the two input numbers
+find_max <- function(a, b) {
+  if (a > b) {
+    return(a)
+  } else {
+    return(b)
+  }
+}
+
+find_max(1,2)
+find_max(5,3)
+```
+
+## Data Structures 
+ - Vectors
+ - Matrices
+ - Lists
+ - ***Data Frames***
+
+```{r}
+#Vectors 
+#One dimensional
+vec <- c(1,2,3,4,5)
+
+#Matrices
+mat <- matrix(c(1,2,3,4), nrow = 2, ncol = 2)
+
+#list
+lll <- list(x = 3, y = vec, z = mat)
+```
+
+## Data Frames
+```{r}
+data.frame(person = c("Greg","Steve","Mary"), 
+           height = c(67, 68, 60),
+           age = c(41, 20, 42), 
+           inschool = c(FALSE,TRUE, TRUE))
+```
+
+
+
+
+## XML 
+
+```{r}
+#https://www.geeksforgeeks.org/working-with-xml-files-in-r-programming/
+library("XML")
+library("methods")
+ 
+# the contents of sample.xml are parsed
+data <- xmlParse(file = "/Users/gregorymatthews/Dropbox/DSCI401/sample.xml")
+ 
+print(data)
+```
+
+```{r}
+# Give the input file name to the function.
+res <- xmlParse(file = "/Users/gregorymatthews/Dropbox/DSCI401/sample.xml")
+ 
+# Extract the root node.
+rootnode <- xmlRoot(res)
+
+# number of nodes in the root.
+nodes <- xmlSize(rootnode)
+ 
+# get entire contents of a record
+second_node <- rootnode[2]
+ 
+# get 3rd attribute of 4th record
+attr <- rootnode[[4]][[3]]
+ 
+cat('number of nodes: ', nodes)
+print ('details of 2 record: ')
+print (second_node)
+ 
+# prints the marks of the fourth record
+print ('3rd attribute of 4th record: ', attr)
+
+```
+
+
+```{r}
+#Convert to data frame.
+dataframe <- xmlToDataFrame( "/Users/gregorymatthews/Dropbox/DSCI401/sample.xml")
+print(dataframe)
+```
+
+## Input and output
+```{r}
+CIACountries <- read.csv("https://raw.githubusercontent.com/gjm112/DSCI401/main/data/CIACountries.csv")
+
+#Output
+#write.csv()
+```
+
+## Tidyverse
+# Tidyverse grammar
+- select(): Returns a sub set of columns (i.e. features or variables)
+- filter(): Returns a subset of rows (i.e. observations)
+- mutate(): add or modify existing columns
+- arrange(): sort the rows
+- summarize(): aggregate the data across rows (e.g., group it according to some criteria)
+
+#Filter and Select
+```{r}
+library(tidyverse)
+library(mdsr)
+#Subset of rows
+filter(CIACountries, pop > 1000000000)
+
+#I can also do it like this
+CIACountries %>% filter(pop > 1e9)
+
+#In base R
+CIACountries[CIACountries$pop > 1e9,]
+
+#or
+subset(CIACountries, pop > 1e9)
+
+```
+
+
+```{r}
+#Subset of columns
+select(CIACountries, country, pop, gdp)
+
+#I can also do it like this
+CIACountries %>% select(country, pop, gdp)
+
+#In base R
+CIACountries[, c("country", "pop", "gdp")]
+
+#or
+subset(CIACountries, select = c("country", "pop", "gdp"))
+
+```
+
+
+```{r}
+#filter and select
+filter(select(CIACountries, country, pop, gdp), pop > 1e9)
+
+#Or we can do this with a pipeline
+CIACountries %>% select(country, pop, gdp) %>% filter(pop > 1e9)
+
+#Or in base R
+CIACountries[CIACountries$pop > 1e9,c("country", "pop", "gdp")]
+
+#or this:
+subset(CIACountries, pop > 1e9, select = c("country", "pop", "gdp"))
+```
+#Mutate and Rename
+```{r}
+#Mutate
+#Population Density
+my_CIACountries <- mutate(CIACountries, dens = pop/area)
+my_CIACountries[1,]
+
+my_CIACountries <- CIACountries %>% mutate(dens = pop/area)
+my_CIACountries[1,]
+
+#Base R
+library(mdsr)
+my_CIACountries$dens <- CIACountries$pop / CIACountries$area
+
+#rename
+my_CIACountries <- CIACountries %>% rename(education = educ)
+my_CIACountries[1,]
+```
+
+#arrange
+
+```{r}
+#Sorting with arrange
+#Defaults to ascending
+CIACountries_sort <- arrange(CIACountries, gdp)
+CIACountries_sort[1:5,]
+
+#Sort descending
+CIACountries_sort <- arrange(CIACountries, desc(gdp))
+CIACountries_sort[1:5,]
+
+CIACountries_sort <- CIACountries %>% arrange(desc(gdp))
+CIACountries_sort[1:5,]
+
+#Base R with order
+CIACountries_sort <- CIACountries[order(CIACountries$gdp),]
+CIACountries_sort[1:5,]
+
+CIACountries_sort <- CIACountries[order(-CIACountries$gdp),]
+CIACountries_sort[1:5,]
+```
+
+#Summarize and Group_by
+```{r}
+#What is the average area by high vs low education countries?
+my_CIACountries <-
+  CIACountries %>% mutate(high_educ = educ > 4.5) %>% group_by(high_educ) %>% summarize(mn_area = mean(area))
+my_CIACountries
+
+#Base R
+my_CIACountries <- CIACountries
+my_CIACountries$high_educ <- CIACountries$educ > 4.5
+tapply(my_CIACountries$area,my_CIACountries$high_educ, mean)
+
+```
+
+
+##In class assignment: What first letter has the largest population? 
+```{r}
+CIACountries %>%
+  mutate(fletter = substring(country, 1, 1)) %>%
+  group_by(fletter) %>%
+  summarise(totalpop = sum(pop)) %>% 
+  arrange(-totalpop) %>% 
+  head(5)
+
+```
+#What proportion of countries produce any oil stratified by net users class? 
+```{r}
+CIACountries %>% 
+  mutate(anyoil = (oil_prod > 0)) %>% 
+  group_by(net_users) %>% 
+  summarise(oil_prop = mean(anyoil, na.rm = TRUE))
+```
+
+
+
+
+## Data viz
+
+```{r}
+library(tidyverse)
+library(babynames)
+
+#Let's tale about layers!
+
+#scatterplot 
+ggplot(aes(x = area, y = pop),data = CIACountries) + geom_point()
+
+#histogram
+ggplot(aes(x = pop),data = CIACountries) + geom_histogram()
+
+#boxplot
+ggplot(aes(y = pop),data = CIACountries) + geom_boxplot()
+
+#Kernel Density estimate
+ggplot(aes(x = pop),data = CIACountries) + geom_density()
+
+#Add multiple layers!
+ggplot(aes(x = area, y = pop),data = CIACountries) + geom_point() + geom_smooth()
+ggplot(aes(x = pop),data = CIACountries) + geom_histogram(aes(y = ..density..)) + geom_density()
+
+
+#Using color
+ggplot(aes(x = area, y = pop, color = (oil_prod > 0)),data = CIACountries) + geom_point()
+
+#faceting
+ggplot(aes(x = area, y = pop, color = (oil_prod > 0)),data = CIACountries) + geom_point() + facet_wrap( ~ net_users)
+```
+
+
+## Presidential Clustering
+```{r eval = FALSE}
+library(RCurl)
+library(XML)
+library(tm)
+
+#Now get them all
+doc<-htmlParse(getURL("http://www.presidentialrhetoric.com/historicspeeches/index.html"))
+vec<-xpathSApply(doc, "//a/@href")
+vecList<-vec[grep("inaugural",vec)]
+
+presList<-list()
+for (vvv in vecList){print(vvv)
+                     url<-paste0("http://www.presidentialrhetoric.com/historicspeeches/",vvv)
+                     a<-getURL(url)
+                     b<-htmlParse(url)
+                     x<-readHTMLTable(b)
+                     text<-x[[6]]$V1
+                     #text<-levels(x[[6]]$V1)
+                     text<-gsub("\n","",text)
+                     text<-gsub("\r","",text)
+                     text<-gsub("[,.]","",text)
+                     presList[[vvv]]<-PlainTextDocument(text)
+}
+
+presCorpus <- Corpus(VectorSource(presList))
+#presCorpus<-tm_map(presCorpus,tolower)
+presCorpus <- tm_map(presCorpus, content_transformer(tolower))
+presCorpus<-tm_map(presCorpus,removeWords,stopwords("english"))
+presCorpus<-tm_map(presCorpus,removePunctuation)
+presCorpus<-tm_map(presCorpus,removeNumbers)
+presCorpus<-tm_map(presCorpus,stripWhitespace)
+#presCorpus<-tm_map(presCorpus,stemDocument)
+presTDM <-TermDocumentMatrix(presCorpus)
+presTDM$dimnames$Docs<-substring(vecList,1,5)
+#save(presTDM,file="/Users/gregorymatthews/Dropbox/presTDM.RData")
+```
+
+```{r}
+library(RCurl)
+library(XML)
+library(tm)
+load("/Users/gregorymatthews/Dropbox/presTDM.RData")
+#presTDM$dimnames$Docs <- vecList
+#findFreqTerms(presTDM,300)
+#findAssocs(presTDM,"drugs",0.9)
+
+m <- as.matrix(t(presTDM))
+rownames(m)<-presTDM$dimnames$Docs
+library(proxy)
+#What is the "cosine" method here?  Why am I using it?
+#http://en.wikipedia.org/wiki/Cosine_similarity
+#Wikipedia answer everything.  
+d <- dist((m),method="cosine")
+#d <- dist((m),method="euclidean")
+hc <- hclust(d, method="average")
+plot(hc)
+```
+
+```{r eval = FALSE}
+weighted<-weightTfIdf(presTDM)
+inspect(weighted[1:10,1:10])
+m <- as.matrix(weighted)
+rownames(m) <- 1:nrow(m)
+cl <- kmeans(t(m), 10)
+cl
+table(cl$cluster)
+
+#Some other fun stuff
+m <- as.matrix(t(presTDM))
+rownames(m)<-presTDM$dimnames$Docs
+group<-factor(c(rep(1,31),rep(2,24)))
+colnames(m)[1]
+
+t.test(m[,1]~group)$p.value
+
+goat<-function(x){
+  if (var(x)>0.001){
+  out<-t.test(x~group)$p.value
+  return(out) } else {
+    return(NA)}
+}
+results<-apply(m,2,goat)
+interesting<-data.frame(word=colnames(m),pval=results)
+interesting[order(interesting$pval),][1:25,]
+
+((interesting[order(interesting$pval),])[1:25,])[-c(1,4,10),]
+t.test((m[,colnames(m)=="duties"])~group)
+t.test((m[,colnames(m)=="world"])~group)
+t.test((m[,colnames(m)=="public"])~group)
+t.test((m[,colnames(m)=="god"])~group)
+t.test((m[,colnames(m)=="poverty"])~group)
+t.test((m[,colnames(m)=="women"])~group)
+t.test((m[,colnames(m)=="men"])~group)
+t.test((m[,colnames(m)=="drugs"])~group)
+t.test((m[,colnames(m)=="constitution"])~group)
+t.test((m[,colnames(m)=="debt"])~group)
+
+t.test((m[,colnames(m)=="streets"])~group)
+t.test((m[,colnames(m)=="corruption"])~group)
+t.test((m[,colnames(m)=="tyranny"])~group)
+t.test((m[,colnames(m)=="faith"])~group)
+t.test((m[,colnames(m)=="religion"])~group)
+t.test((m[,colnames(m)=="threat"])~group)
+t.test((m[,colnames(m)=="blood"])~group)
+
+word <- "children"
+counts <- c()
+for (i in 1:length(presCorpus)){
+  counts[i] <- 0
+  if (gregexpr(word,presCorpus[[i]]$content)[[1]]>0){
+counts[i] <- length(gregexpr(word,presCorpus[[i]]$content)[[1]])
+}
+}
+  
+plot(seq(1777,2005,4)[-c(1:3)],counts)
+points(seq(1777,2005,4)[-c(1:3)], counts, type = "l")
+
+
+
+
+m[,colnames(m)=="work"]
+
+temp<-strsplit(presList[[15]]," ")
+cbind(temp[[1]][which(temp[[1]]=="duty")+1],
+      temp[[1]][which(temp[[1]]=="duty")+2],
+      temp[[1]][which(temp[[1]]=="duty")+3])
+thing<-cbind(temp[[1]][which(temp[[1]]=="duty")-3],
+             temp[[1]][which(temp[[1]]=="duty")-2],
+             temp[[1]][which(temp[[1]]=="duty")-1])
+
+
+
+#Examples from here: http://michael.hahsler.net/SMU/7337/install/tm.R
+```
