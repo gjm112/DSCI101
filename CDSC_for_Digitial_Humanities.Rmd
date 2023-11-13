@@ -307,7 +307,7 @@ find_max(5,3)
 ```{r}
 #Vectors 
 #One dimensional
-vec <- c(1,2,3,4,5)
+vec <- c(7,8,3,4,10)
 
 #Matrices
 mat <- matrix(c(1,2,3,4), nrow = 2, ncol = 2)
@@ -318,7 +318,7 @@ lll <- list(x = 3, y = vec, z = mat)
 
 ## Data Frames
 ```{r}
-data.frame(person = c("Greg","Steve","Mary"), 
+df <- data.frame(person = c("Greg","Steve","Mary"), 
            height = c(67, 68, 60),
            age = c(41, 20, 42), 
            inschool = c(FALSE,TRUE, TRUE))
@@ -387,6 +387,21 @@ CIACountries <- read.csv("https://raw.githubusercontent.com/gjm112/DSCI401/main/
 - mutate(): add or modify existing columns
 - arrange(): sort the rows
 - summarize(): aggregate the data across rows (e.g., group it according to some criteria)
+
+```{r}
+CIACountries %>% filter(gdp > 10000) %>% select(pop, area, oil_prod)
+#Doesn't work!  Order matters!
+#CIACountries %>% select(pop, area, oil_prod)  %>% filter(gdp > 10000) 
+
+CIACountries %>% mutate(density = pop/area)
+
+CIACountries %>% arrange(-pop) %>% head()
+
+CIACountries %>% group_by(net_users) %>% summarize(total_pop = sum(pop), n = n())
+
+
+```
+
 
 #Filter and Select
 ```{r}
@@ -523,10 +538,13 @@ library(babynames)
 #Let's tale about layers!
 
 #scatterplot 
-ggplot(aes(x = area, y = pop),data = CIACountries) + geom_point()
+ggplot(aes(x = area, y = pop),data = CIACountries) + geom_point() + geom_smooth(method = "lm")
 
 #histogram
 ggplot(aes(x = pop),data = CIACountries) + geom_histogram()
+
+#histogram
+ggplot(aes(x = net_users),data = CIACountries) + geom_bar()
 
 #boxplot
 ggplot(aes(y = pop),data = CIACountries) + geom_boxplot()
@@ -536,7 +554,7 @@ ggplot(aes(x = pop),data = CIACountries) + geom_density()
 
 #Add multiple layers!
 ggplot(aes(x = area, y = pop),data = CIACountries) + geom_point() + geom_smooth()
-ggplot(aes(x = pop),data = CIACountries) + geom_histogram(aes(y = ..density..)) + geom_density()
+ggplot(aes(x = pop),data = CIACountries) + geom_density(color = "red") + geom_histogram(aes(y = ..density..)) 
 
 
 #Using color
